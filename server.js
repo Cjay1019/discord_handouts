@@ -20,9 +20,7 @@ require("./routes/api")(app);
 app.get("/", (req, res) => res.sendFile("/client/build/index.html"));
 
 // Listener for post request with this specific route
-app.post("/test", (req, res) => {
-        res.json({ success: true, message: "That's correct!" });
-})
+app.post("/test", (req, res) => res.json({ success: true, message: "That's correct!" }));
 
 // Listens for provided port and runs server
 app.listen(PORT, () => console.log(`🌎 ==> Server now on port ${PORT}!`))
