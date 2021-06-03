@@ -1,29 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
-import axios from "axios";
+import Home from "./pages/Home";
+// import axios from "axios";
+import { createMuiTheme, ThemeProvider, CssBaseline } from "@material-ui/core";
 
-function App() {
-  axios.post("/test", { test: "test" }).then(res => {
-    console.log(res.data)
+export default function App() {
+  const theme = createMuiTheme({
+    palette: {
+      type: "dark"
+    }
   });
+
+  // useEffect(() => {
+  //   axios.post("/test", { test: "test" }).then(res => {
+  //     console.log(res.data)
+  //   });
+  // }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Home />
+    </ThemeProvider>
   );
 }
-
-export default App;
