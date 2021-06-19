@@ -18,14 +18,14 @@ require("./routes/api")(app);
 
 const db = require("./models");
 
-(async function () {
+(async () => {
     try {
         const connection = await db.sequelize.sync();
         console.log(connection.connectionManager.config.database);
     } catch (err) {
         console.error(err);
     }
-}());
+})();
 
 // Serves html file when root directory is hit
 app.get("/", (req, res) => res.sendFile("/client/build/index.html"));

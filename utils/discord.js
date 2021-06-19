@@ -9,7 +9,7 @@ client.on("ready", () => console.log(`Logged in as ${client.user.tag}`));
 client.login(process.env.DISCORD_TOKEN);
 
 module.exports = {
-    send: async function (url, name, res) {
+    send: async (url, name, res) => {
         try {
             // Find handout channel using id in env file
             const channel = await client.channels.fetch(process.env.CHANNEL);
