@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Button, Container, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, makeStyles } from '@material-ui/core';
 import PublishIcon from '@material-ui/icons/Publish';
 import axios from "axios";
+import { response } from "express";
 
 const useStyles = makeStyles({
     table: {
@@ -13,29 +14,35 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
+    const [handouts, setHandouts] = useState([]);
     const [isOpen, setOpen] = useState(false);
     const [image, setImage] = useState(false);
 
     const classes = useStyles();
 
-    const labels = ["First", "Second", "Third", "Forth"];
-
-    const mockData = [
-        { url: "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/590/1000/1000/636376367240991526.jpeg", name: "Umber Hulk", status: "unsent" },
-        { url: "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/91/1000/1000/636252738665379794.jpeg", name: "Vampire", status: "sent" },
-        { url: "https://media-waterdeep.cursecdn.com/avatars/thumbnails/16/590/1000/1000/636376367240991526.jpeg", name: "Umber Hulk", status: "unsent" },
-        { url: "https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/91/1000/1000/636252738665379794.jpeg", name: "Vampire", status: "sent" }
-    ];
+    useEffect(async () => {
+        // TODO: Try Catches
+        const allHandouts = await axios.get("/api/getAllHandouts");
+        setHandouts(allHandouts.data);
+    }, []);
 
     const handleDialogOpen = (url) => {
         setOpen(true);
         setImage(url);
-    };
+    }
+
     const handleDialogClose = () => setOpen(false);
 
-    const testClick = async () => {
-        const discordResponse = await axios.post("/api/send", mockData[0]);
-        console.log(discordResponse);
+    const sendHandout = async (handout) => {
+        // TODO: Try catches
+        const discordResponse = await axios.post("/api/sendHandout", handout);
+        console.log(discordResponse.data);
+
+        if (discordResponse.data.code === 200) {
+            const updateBody = { id: handout.id, sent: true };
+            const updateStatusResponse = await axios.post("/api/updateStatus", updateBody);
+            // TODO: update state
+        }
     }
 
     return (
@@ -48,18 +55,18 @@ export default function Home() {
                         </TableRow>
                     </TableHead> */}
                     <TableBody>
-                        {mockData.map((item, idx) => (
+                        {handouts.map((handout, idx) => (
                             <TableRow key={idx}>
                                 <TableCell>
-                                    <IconButton aria-label="upload" onClick={testClick}>
+                                    <IconButton aria-label="upload" onClick={() => sendHandout(handout)}>
                                         <PublishIcon />
                                     </IconButton>
                                 </TableCell>
                                 <TableCell>
-                                    <Avatar alt={item.name} src={item.url} variant="rounded" className={classes.image} onClick={() => handleDialogOpen(item.url)} />
+                                    <Avatar alt={handout.name} src={handout.url} variant="rounded" className={classes.image} onClick={() => handleDialogOpen(handout.url)} />
                                 </TableCell>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell>{item.status}</TableCell>
+                                <TableCell>{handout.name}</TableCell>
+                                <TableCell>{handout.status}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

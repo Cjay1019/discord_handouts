@@ -5,10 +5,6 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement: true,
             primaryKey: true
         },
-        timeStamp: {
-            type: Sequelize.DATE,
-            defaultValue: Sequelize.NOW
-        },
         url: {
             type: Sequelize.TEXT,
             allowNull: false

@@ -1,5 +1,4 @@
 import Home from "./pages/Home";
-// import axios from "axios";
 import { createMuiTheme, ThemeProvider, CssBaseline } from "@material-ui/core";
 
 export default function App() {
@@ -8,12 +7,6 @@ export default function App() {
       type: "dark"
     }
   });
-
-  // useEffect(() => {
-  //   axios.post("/test", { test: "test" }).then(res => {
-  //     console.log(res.data)
-  //   });
-  // }, [])
 
   return (
     <ThemeProvider theme={theme}>

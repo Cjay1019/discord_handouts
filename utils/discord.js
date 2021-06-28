@@ -1,6 +1,7 @@
 const { Client, MessageEmbed } = require("discord.js");
 const client = new Client();
 const Response = require("../models/Response");
+const Controller = require("../controllers/handoutController");
 
 // If login is successful
 client.on("ready", () => console.log(`Logged in as ${client.user.tag}`));
@@ -20,8 +21,8 @@ module.exports = {
             // Send success response
             res.json(new Response(200, 200, `Attachment sent successfully to channel #${channel.name}`));
         } catch (err) {
-            console.error(error);
-            res.json(e);
+            console.error(err);
+            res.json(err);
         }
     }
 }

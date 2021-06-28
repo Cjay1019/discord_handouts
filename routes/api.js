@@ -1,8 +1,7 @@
-const discord = require("../utils/discord");
+const Controller = require("../controllers/handoutController");
 
 module.exports = app => {
-    app.post("/api/send", (req, res) => {
-        const image = req.body;
-        discord.send(image.url, image.name, res);
-    });
+    app.post("/api/sendHandout", Controller.send);
+
+    app.get("/api/getAllHandouts", Controller.findAll);
 }
