@@ -1,7 +1,6 @@
 const { Client, MessageEmbed } = require("discord.js");
 const client = new Client();
 const Response = require("../models/Response");
-const Controller = require("../controllers/handoutController");
 
 // If login is successful
 client.on("ready", () => console.log(`Logged in as ${client.user.tag}`));

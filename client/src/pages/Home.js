@@ -1,80 +1,83 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Container, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, makeStyles } from '@material-ui/core';
-import PublishIcon from '@material-ui/icons/Publish';
+import { Container, Dialog, Fab, Tooltip, Zoom, makeStyles } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import axios from "axios";
-import { response } from "express";
+import HandoutsTable from "../components/HandoutsTable";
+import HandoutForm from "../components/HandoutForm";
 
-const useStyles = makeStyles({
-    table: {
-        minWidth: 650,
-    },
-    image: {
-        cursor: "pointer"
+const useStyles = makeStyles(theme => ({
+    fab: {
+        position: "fixed",
+        bottom: theme.spacing(2),
+        right: theme.spacing(2),
     }
-});
+}));
 
 export default function Home() {
     const [handouts, setHandouts] = useState([]);
-    const [isOpen, setOpen] = useState(false);
+    const [dialogIsOpen, setDialogOpen] = useState(false);
+    const [formIsOpen, setFormOpen] = useState(false);
     const [image, setImage] = useState(false);
+
+    useEffect(() => loadHandouts(), []);
 
     const classes = useStyles();
 
-    useEffect(async () => {
-        // TODO: Try Catches
-        const allHandouts = await axios.get("/api/getAllHandouts");
-        setHandouts(allHandouts.data);
-    }, []);
-
-    const handleDialogOpen = (url) => {
-        setOpen(true);
-        setImage(url);
+    const loadHandouts = async () => {
+        try {
+            const allHandouts = await axios.get("/api/getAllHandouts");
+            setHandouts(allHandouts.data);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    const handleDialogClose = () => setOpen(false);
+    const handleDialogOpen = image => {
+        setDialogOpen(true);
+        setImage(image);
+    }
 
-    const sendHandout = async (handout) => {
-        // TODO: Try catches
-        const discordResponse = await axios.post("/api/sendHandout", handout);
-        console.log(discordResponse.data);
+    const handleDialogClose = () => setDialogOpen(false);
 
-        if (discordResponse.data.code === 200) {
-            const updateBody = { id: handout.id, sent: true };
-            const updateStatusResponse = await axios.post("/api/updateStatus", updateBody);
-            // TODO: update state
-        }
+    const openForm = () => setFormOpen(true);
+
+    const renderTables = () => {
+        const sentHandouts = handouts.filter(handout => handout.sent);
+        const unsentHandouts = handouts.filter(handout => !handout.sent);
+
+        return (
+            <>
+                {sentHandouts.length > 0 &&
+                    <HandoutsTable
+                        handouts={sentHandouts}
+                        loadHandouts={loadHandouts}
+                        handleDialogOpen={handleDialogOpen}
+                        sent={true}
+                    />}
+                {unsentHandouts.length > 0 &&
+                    <HandoutsTable
+                        handouts={unsentHandouts}
+                        loadHandouts={loadHandouts}
+                        handleDialogOpen={handleDialogOpen}
+                        sent={false}
+                    />}
+            </>
+        );
     }
 
     return (
         <Container maxWidth="md">
-            <TableContainer component={Paper}>
-                <Table className={classes.table}>
-                    {/* <TableHead>
-                        <TableRow>
-                            {labels.map(item => <TableCell>{item}</TableCell>)}
-                        </TableRow>
-                    </TableHead> */}
-                    <TableBody>
-                        {handouts.map((handout, idx) => (
-                            <TableRow key={idx}>
-                                <TableCell>
-                                    <IconButton aria-label="upload" onClick={() => sendHandout(handout)}>
-                                        <PublishIcon />
-                                    </IconButton>
-                                </TableCell>
-                                <TableCell>
-                                    <Avatar alt={handout.name} src={handout.url} variant="rounded" className={classes.image} onClick={() => handleDialogOpen(handout.url)} />
-                                </TableCell>
-                                <TableCell>{handout.name}</TableCell>
-                                <TableCell>{handout.status}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Dialog open={isOpen} onClose={handleDialogClose}>
-                <img src={image} />
+            {renderTables()}
+            <Dialog open={dialogIsOpen} onClose={handleDialogClose}>
+                <img src={image.url} alt={image.name} />
             </Dialog>
+            <Tooltip TransitionComponent={Zoom} title="Add handout" placement="left">
+                <Fab color="primary" aria-label="add" className={classes.fab} onClick={openForm}><AddIcon /></Fab>
+            </Tooltip>
+            <HandoutForm
+                formIsOpen={formIsOpen}
+                setFormOpen={setFormOpen}
+            />
         </Container>
     );
 }
