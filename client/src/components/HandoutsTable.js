@@ -1,13 +1,14 @@
 import React from "react";
-import { Table, TableBody, TableContainer, TableRow, Toolbar, Typography, Paper, makeStyles } from '@material-ui/core';
+import { Divider, Table, TableBody, TableContainer, TableRow, Toolbar, Typography, Paper, makeStyles } from '@material-ui/core';
 import axios from "axios";
 import HandoutsTableRow from "./HandoutsTableRow";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
     table: {
-        minWidth: 650,
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(2)
     }
-});
+}));
 
 export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen, sent }) {
     const classes = useStyles();
@@ -30,12 +31,13 @@ export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen
     }
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} className={classes.table}>
             <Toolbar>
                 <Typography variant="h6">{sent ? "Sent" : "Unsent"}</Typography>
             </Toolbar>
+            <Divider />
 
-            <Table className={classes.table}>
+            <Table>
                 <TableBody>
                     {handouts.map((handout, idx) => (
                         <TableRow key={idx}>
@@ -43,6 +45,7 @@ export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen
                                 handout={handout}
                                 sendHandout={sendHandout}
                                 handleDialogOpen={handleDialogOpen}
+                                loadHandouts={loadHandouts}
                             />
                         </TableRow>
                     ))}

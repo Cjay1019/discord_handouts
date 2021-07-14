@@ -7,5 +7,7 @@ module.exports = app => {
 
     app.put("/api/updateHandout", Controller.update);
 
+    app.post("/api/deleteHandout", Controller.delete);
+
     app.post("/api/sendHandout", Controller.send);
 }

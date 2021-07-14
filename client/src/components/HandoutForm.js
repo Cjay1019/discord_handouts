@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, IconButton, TableCell, TextField, Switch, makeStyles } from '@material-ui/core';
-import PublishIcon from '@material-ui/icons/Publish';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, TextField, Switch, makeStyles } from '@material-ui/core';
 import axios from "axios";
 
 const useStyles = makeStyles({
@@ -72,7 +71,6 @@ export default function HandoutForm({ formIsOpen, setFormOpen, loadHandouts }) {
                 />
                 <TextField
                     autoComplete="off"
-                    autoFocus
                     name="url"
                     value={handout.url}
                     margin="dense"

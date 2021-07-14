@@ -46,19 +46,19 @@ export default function Home() {
 
         return (
             <>
-                {sentHandouts.length > 0 &&
-                    <HandoutsTable
-                        handouts={sentHandouts}
-                        loadHandouts={loadHandouts}
-                        handleDialogOpen={handleDialogOpen}
-                        sent={true}
-                    />}
                 {unsentHandouts.length > 0 &&
                     <HandoutsTable
                         handouts={unsentHandouts}
                         loadHandouts={loadHandouts}
                         handleDialogOpen={handleDialogOpen}
                         sent={false}
+                    />}
+                {sentHandouts.length > 0 &&
+                    <HandoutsTable
+                        handouts={sentHandouts}
+                        loadHandouts={loadHandouts}
+                        handleDialogOpen={handleDialogOpen}
+                        sent={true}
                     />}
             </>
         );

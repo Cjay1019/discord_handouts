@@ -32,7 +32,7 @@ module.exports.update = async (req, res) => {
             where: { id: req.body.id }
         });
 
-        if (updateResponse[0] !== 1) throw(new Response(1001, 200, `Could not find handout matching id ${req.body.id}`));
+        if (updateResponse[0] !== 1) throw (new Response(1001, 200, `Could not find handout matching id ${req.body.id}`));
         res.json(new Response(200, 200, `Handout ${req.body.id} successfully updated`));
     } catch (err) {
         console.error(err);
@@ -40,8 +40,19 @@ module.exports.update = async (req, res) => {
     }
 };
 
-module.exports.delete = (req, res) => {
+module.exports.delete = async (req, res) => {
+    try {
+        const deleteResponse = await Handout.destroy({
+            where: { id: req.body.id }
+        });
 
+        if (deleteResponse === 0) throw (new Response(3001, 200, `Error deleting handout with id ${req.body.id}`));
+
+        res.json(new Response(200, 200, `Successfully deleted handout with id ${req.body.id}`));
+    } catch (err) {
+        console.error(err);
+        res.json(err);
+    }
 };
 
 module.exports.send = (req, res) => {
