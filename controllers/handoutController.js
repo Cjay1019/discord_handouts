@@ -3,11 +3,20 @@ const Handout = db.handouts;
 const discord = require("../utils/discord");
 const Response = require("../models/Response");
 
-module.exports.create = (req, res) => {
-
+module.exports.create = async (req, res) => {
+    try {
+        console.log(req.body);
+        const createResponse = await Handout.create(req.body);
+        console.log(createResponse.dataValues)
+        if (!createResponse.dataValues) throw (new Response(2001, 200, "Error creating new handout"));
+        res.json(new Response(200, 200, `New handout created with id ${createResponse.dataValues.id}`));
+    } catch (err) {
+        console.log(err);
+        res.json(err);
+    }
 };
 
-module.exports.findAll = async (req, res) => {
+module.exports.read = async (req, res) => {
     try {
         const handouts = await Handout.findAll();
         res.json(handouts);
@@ -38,8 +47,7 @@ module.exports.delete = (req, res) => {
 module.exports.send = (req, res) => {
     try {
         const image = req.body;
-        console.log(discord)
-        discord.send(image.url, image.name, res);
+        discord.send(image.url, image.name, image.hideName, res);
     } catch (err) {
         console.err(err);
         res.json(err);

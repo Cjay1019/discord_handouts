@@ -9,12 +9,14 @@ client.on("ready", () => console.log(`Logged in as ${client.user.tag}`));
 client.login(process.env.DISCORD_TOKEN);
 
 module.exports = {
-    send: async (url, name, res) => {
+    send: async (url, name, hideName, res) => {
         try {
             // Find handout channel using id in env file
             const channel = await client.channels.fetch(process.env.CHANNEL);
             // Create attachment with client data
-            const attachment = new MessageEmbed().setImage(url).setDescription(name);
+            const attachment = new MessageEmbed().setImage(url);
+            if (hideName === false) attachment.setDescription(name);
+
             // Send attachment to channel
             await channel.send(attachment);
             // Send success response

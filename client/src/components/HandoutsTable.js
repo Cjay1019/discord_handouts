@@ -10,7 +10,6 @@ const useStyles = makeStyles({
 });
 
 export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen, sent }) {
-
     const classes = useStyles();
 
     const sendHandout = async handout => {
@@ -20,7 +19,7 @@ export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen
             if (discordResponse.data.code !== 200) throw (discordResponse.data);
 
             const updateBody = { id: handout.id, fields: { sent: true } };
-            const updateHandoutResponse = await axios.post("/api/updateHandout", updateBody);
+            const updateHandoutResponse = await axios.put("/api/updateHandout", updateBody);
 
             if (updateHandoutResponse.data.code !== 200) throw (updateHandoutResponse.data);
 

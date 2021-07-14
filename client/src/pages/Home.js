@@ -14,14 +14,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Home() {
+    const classes = useStyles();
     const [handouts, setHandouts] = useState([]);
     const [dialogIsOpen, setDialogOpen] = useState(false);
     const [formIsOpen, setFormOpen] = useState(false);
     const [image, setImage] = useState(false);
 
     useEffect(() => loadHandouts(), []);
-
-    const classes = useStyles();
 
     const loadHandouts = async () => {
         try {
@@ -74,10 +73,7 @@ export default function Home() {
             <Tooltip TransitionComponent={Zoom} title="Add handout" placement="left">
                 <Fab color="primary" aria-label="add" className={classes.fab} onClick={openForm}><AddIcon /></Fab>
             </Tooltip>
-            <HandoutForm
-                formIsOpen={formIsOpen}
-                setFormOpen={setFormOpen}
-            />
+            <HandoutForm formIsOpen={formIsOpen} setFormOpen={setFormOpen} loadHandouts={loadHandouts} />
         </Container>
     );
 }

@@ -9,7 +9,6 @@ const useStyles = makeStyles({
 });
 
 export default function HandoutsTableRow({ handout, sendHandout, handleDialogOpen }) {
-
     const classes = useStyles();
 
     return (
@@ -30,5 +29,5 @@ export default function HandoutsTableRow({ handout, sendHandout, handleDialogOpe
             </TableCell>
             <TableCell>{handout.name}</TableCell>
         </>
-    )
+    );
 }
