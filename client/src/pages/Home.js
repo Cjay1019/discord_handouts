@@ -52,6 +52,7 @@ export default function Home() {
                         loadHandouts={loadHandouts}
                         handleDialogOpen={handleDialogOpen}
                         sent={false}
+                        openForm={openForm}
                     />}
                 {sentHandouts.length > 0 &&
                     <HandoutsTable
@@ -59,6 +60,7 @@ export default function Home() {
                         loadHandouts={loadHandouts}
                         handleDialogOpen={handleDialogOpen}
                         sent={true}
+                        openForm={openForm}
                     />}
             </>
         );

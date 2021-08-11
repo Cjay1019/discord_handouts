@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Avatar, Button, CircularProgress, Dialog, DialogActions, DialogTitle, IconButton, TableCell, Tooltip, Zoom, makeStyles, Typography } from '@material-ui/core';
-import PublishIcon from '@material-ui/icons/Publish';
 import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import PublishIcon from '@material-ui/icons/Publish';
 import axios from "axios";
+import { HandoutContext } from "../contexts/HandoutContext";
 
 const useStyles = makeStyles(theme => ({
     image: {
@@ -22,8 +24,9 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function HandoutsTableRow({ handout, sendHandout, handleDialogOpen, loadHandouts }) {
+export default function HandoutsTableRow({ handout, sendHandout, handleDialogOpen, loadHandouts, openForm }) {
     const classes = useStyles();
+    const [, setHandout] = useContext(HandoutContext);
     const [isOpen, setOpen] = useState(false);
     const [isDeleting, setDeleting] = useState(false);
 
@@ -42,12 +45,19 @@ export default function HandoutsTableRow({ handout, sendHandout, handleDialogOpe
         }
     }
 
+    const editHandout = () => {
+        setHandout(handout);
+        openForm();
+    }
+
     return (
         <>
             <TableCell width="10%">
-                <IconButton aria-label="upload" onClick={() => sendHandout(handout)}>
-                    <PublishIcon />
-                </IconButton>
+                <Tooltip TransitionComponent={Zoom} title="Send handout" placement="top" enterDelay={500}>
+                    <IconButton aria-label="upload" onClick={() => sendHandout(handout)}>
+                        <PublishIcon />
+                    </IconButton>
+                </Tooltip>
             </TableCell>
             <TableCell width="10%">
                 <Avatar
@@ -62,8 +72,13 @@ export default function HandoutsTableRow({ handout, sendHandout, handleDialogOpe
                 <Typography>{handout.name}</Typography>
             </TableCell>
             <TableCell align="right">
+                <Tooltip TransitionComponent={Zoom} title="Edit handout" placement="top" enterDelay={500}>
+                    <IconButton aria-label="edit" onClick={editHandout}>
+                        <EditIcon />
+                    </IconButton>
+                </Tooltip>
                 <Tooltip TransitionComponent={Zoom} title="Delete handout" placement="top" enterDelay={500}>
-                    <IconButton aria-label="delete" className={classes.deleteIcon} onClick={() => setOpen(true)}>
+                    <IconButton aria-label="delete" onClick={() => setOpen(true)}>
                         <DeleteIcon />
                     </IconButton>
                 </Tooltip>

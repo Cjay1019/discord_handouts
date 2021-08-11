@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, TextField, Switch, makeStyles } from '@material-ui/core';
 import axios from "axios";
+import { HandoutContext } from "../contexts/HandoutContext";
 
 const useStyles = makeStyles({
     spinner: {
@@ -14,12 +15,10 @@ const useStyles = makeStyles({
 export default function HandoutForm({ formIsOpen, setFormOpen, loadHandouts }) {
     const classes = useStyles();
     const [isCreating, setCreating] = useState(false);
-    const [handout, setHandout] = useState({
-        id: "",
-        name: "",
-        url: "",
-        hideName: false
-    });
+    const [staticName, setStaticName] = useState("");
+    const [handout, setHandout] = useContext(HandoutContext);
+
+    useEffect(() => setStaticName(handout.name), [handout.name]);
 
     const handleChange = e => setHandout({ ...handout, [e.target.name]: e.target.value || !e.target.checked });
 
@@ -49,12 +48,29 @@ export default function HandoutForm({ formIsOpen, setFormOpen, loadHandouts }) {
     }
 
     const handleUpdate = async () => {
-        console.log("UPDATE");
+        const updatedHandout = {
+            id: handout.id,
+            fields: { name: handout.name, url: handout.url, hideName: handout.hideName }
+        }
+        setCreating(true);
+
+        try {
+            const updateResponse = await axios.put("/api/updateHandout", updatedHandout);
+
+            if (updateResponse.data.code !== 200) throw updateResponse.data;
+
+            setFormOpen(false);
+            setTimeout(() => setCreating(false), 250);
+            resetForm();
+            loadHandouts();
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     return (
         <Dialog open={formIsOpen} onClose={() => setFormOpen(false)} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">{isUpdating() ? `Update ${handout.name}` : "Create new handout"}</DialogTitle>
+            <DialogTitle id="form-dialog-title">{isUpdating() ? `Update ${staticName}` : "Create new handout"}</DialogTitle>
             <DialogContent>
                 <TextField
                     autoComplete="off"

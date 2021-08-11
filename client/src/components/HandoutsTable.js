@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen, sent }) {
+export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen, sent, openForm }) {
     const classes = useStyles();
 
     const sendHandout = async handout => {
@@ -46,6 +46,7 @@ export default function HandoutsTable({ handouts, loadHandouts, handleDialogOpen
                                 sendHandout={sendHandout}
                                 handleDialogOpen={handleDialogOpen}
                                 loadHandouts={loadHandouts}
+                                openForm={openForm}
                             />
                         </TableRow>
                     ))}
