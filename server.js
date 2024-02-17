@@ -1,5 +1,7 @@
 const express = require("express");
 const path = require("path");
+const dotenv = require("dotenv");
+dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 
@@ -29,7 +31,7 @@ const db = require("./models");
 })();
 
 // Serves html file when root directory is hit
-app.get("*", (req, res) => res.sendFile("/client/build/index.html"));
+app.get("*", (req, res) => res.sendFile("/index.html"));
 
 // Listener for post request with this specific route
 app.post("/test", (req, res) => res.json({ success: true, message: "That's correct!" }));
